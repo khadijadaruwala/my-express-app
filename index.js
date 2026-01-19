@@ -5,8 +5,22 @@ const birds =  require('./birds')
 
 app.use('/birds', birds)
 
+const myLogger = function (req, res, next) {
+    console.log('Logged from logger')
+    next()
+}
+const requestTime = function (req, res, next){
+    req.requestTime = Date.now()
+    next()
+}
+
+app.use(myLogger)
+app.use(requestTime)
+
 app.get('/', (req,res) => {
-    res.send('Hello World!')
+    let responseText = 'Hello World! <br>'
+    responseText += `<small>Requested at: ${req.requestTime}</small>`
+    res.send(responseText)
 })
 
 app.post('/', (req, res) => {
